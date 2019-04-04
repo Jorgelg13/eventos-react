@@ -1,25 +1,42 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Header from './componentes/Header';
+import Formulario from './componentes/Formulario';
 
 class App extends Component {
+
+  state={
+    categorias:[]
+  }
+
+  token = 'BHVQS2VB5343HWC5VEQJ';
+
+  componentDidMount(){
+    this.obtenerCategoria();
+  }
+
+  obtenerCategoria = async () =>{
+     let url = `https://www.eventbriteapi.com/v3/categories/?token=${this.token}&locale=es_ES`;
+     
+     await fetch(url)
+     .then(respuesta =>{
+       return respuesta.json();
+     })
+     .then(categorias =>{
+       this.setState({
+         categorias: categorias.categories
+       });
+     });
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Header titulo="Visor de eventos"></Header>
+        <div className="uk-container">
+          <Formulario
+            categorias = {this.state.categorias}
+          />
+        </div>
       </div>
     );
   }
